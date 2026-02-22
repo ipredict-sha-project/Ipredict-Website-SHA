@@ -1,0 +1,559 @@
+/* Professional Navbar Styles */
+.professional-top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 1000;
+  height: 80px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar-container {
+  max-width: 100%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  gap: 24px;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #2962ff 0%, #1e4dd8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.logo-i {
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.logo-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.43;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.logo-subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.33;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.menu-wrapper {
+  position: relative;
+}
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  height: 44px;
+}
+
+.menu-button:hover {
+  background: #f9fafb;
+}
+
+.button-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a;
+  line-height: 1.43;
+}
+
+.icon-menu {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.icon-chevron {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.icon-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.page-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: #f9fafb;
+  border-radius: 16px;
+  height: 40px;
+}
+
+.badge-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.badge-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a;
+  line-height: 1.43;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.top-bar-center {
+  flex: 0 0 auto;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 20px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  transition: all 0.2s;
+  height: 48px;
+}
+
+.top-bar-center:focus-within {
+  background: white;
+  border-color: #2962ff;
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.1);
+}
+
+.search-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+  color: #1a1a1a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-width: 0;
+}
+
+.search-input::placeholder {
+  color: #99a1af;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.notification-button {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.notification-button:hover {
+  background: #f9fafb;
+}
+
+.bell-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 9px;
+  height: 9px;
+  background: #fb2c36;
+  border-radius: 50%;
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 52px;
+}
+
+.user-button:hover {
+  background: #f9fafb;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #2962ff 0%, #1e4dd8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar span {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  width: 418px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 1001;
+  animation: fadeIn 0.2s;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, rgba(41, 98, 255, 0.05) 0%, rgba(41, 98, 255, 0.03) 50%, rgba(0, 0, 0, 0) 100%);
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.menu-header-text h3.menu-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #101828;
+  margin: 0;
+  line-height: 1.5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.menu-header-text p.menu-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6a7282;
+  margin: 2px 0 0 0;
+  line-height: 1.5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.menu-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #2962ff 0%, #1e4dd8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 15px rgba(41, 98, 255, 0.3), 0 4px 6px rgba(41, 98, 255, 0.3);
+}
+
+.menu-logo-i {
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.menu-content {
+  padding: 12px 0;
+}
+
+.menu-section {
+  margin-bottom: 0;
+}
+
+.menu-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #99a1af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.menu-section-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.menu-item:hover {
+  background: #f9fafb;
+}
+
+.menu-item.active {
+  background: #2962ff;
+  box-shadow: 0 10px 15px rgba(41, 98, 255, 0.25), 0 4px 6px rgba(41, 98, 255, 0.25);
+}
+
+.menu-item-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item.active .menu-item-icon-wrapper {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-item-icon-img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.menu-item:not(.active) .menu-item-icon-img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(7%) saturate(1115%) hue-rotate(182deg) brightness(95%) contrast(88%);
+}
+
+.menu-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-item-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+.menu-item.active .menu-item-label {
+  color: white;
+}
+
+.menu-item-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 14px;
+  line-height: 1.5;
+}
+
+.menu-item-desc {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6a7282;
+  margin: 0;
+  line-height: 1.33;
+}
+
+.menu-item.active .menu-item-desc {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.menu-item-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.menu-divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, #e5e7eb 50%, rgba(0, 0, 0, 0) 100%);
+  margin: 12px 16px;
+}
+
+.menu-footer {
+  padding: 16px;
+  border-top: 1px solid #f3f4f6;
+  background: linear-gradient(164deg, #f9fafb 0%, white 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-support-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(180deg, #2962ff 0%, #1e4dd8 100%);
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 10px 15px rgba(41, 98, 255, 0.25), 0 4px 6px rgba(41, 98, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.menu-support-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 20px rgba(41, 98, 255, 0.3), 0 6px 8px rgba(41, 98, 255, 0.3);
+}
+
+.menu-support-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-support-icon .menu-item-icon-img {
+  width: 16px;
+  height: 16px;
+}
+
+.menu-support-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.5;
+}
+
+.menu-footer-text {
+  font-size: 11px;
+  font-weight: 400;
+  color: #99a1af;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .top-bar-center {
+    max-width: 400px;
+  }
+  
+  .button-text {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-bar-container {
+    padding: 0 16px;
+    gap: 16px;
+  }
+  
+  .logo-text {
+    display: none;
+  }
+  
+  .top-bar-center {
+    max-width: 300px;
+  }
+  
+  .nav-badge {
+    display: none;
+  }
+}
