@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Users,
   Activity,
@@ -23,127 +23,7 @@ import {
   FileText,
   ChevronDown,
 } from "lucide-react";
-
-// --- Mock Data ---
-
-const statsData = [
-  {
-    title: "TOTAL ADMIN USERS",
-    value: "24",
-    icon: Users,
-    trend: null,
-    color: "text-blue-600",
-    bgIcon: "text-gray-400",
-  },
-  {
-    title: "ACTIVE SESSIONS",
-    value: "18",
-    icon: Activity,
-    trend: null,
-    color: "text-green-600",
-    bgIcon: "text-gray-400",
-  },
-  {
-    title: "FAILED LOGIN ATTEMPTS",
-    value: "7",
-    icon: AlertTriangle,
-    trend: "+3 from yesterday",
-    trendColor: "text-red-500",
-    color: "text-orange-600",
-    bgIcon: "text-gray-400",
-  },
-  {
-    title: "SECURITY ALERTS",
-    value: "2",
-    icon: Shield,
-    trend: null,
-    color: "text-red-600",
-    bgIcon: "text-gray-400",
-  },
-];
-
-const permissionsData = [
-  { resource: "Devices", superAdmin: true, admin: true, user: false },
-  { resource: "Sensors", superAdmin: true, admin: true, user: false },
-  { resource: "Alerts", superAdmin: true, admin: true, user: true },
-  { resource: "Reports", superAdmin: true, admin: true, user: true },
-  { resource: "Analytics", superAdmin: true, admin: true, user: false },
-  { resource: "Users", superAdmin: true, admin: false, user: false },
-  { resource: "Security", superAdmin: true, admin: false, user: false },
-];
-
-const usersData = [
-  {
-    id: 1,
-    name: "Ahmed Hassan",
-    email: "ahmed.hassan@ipredict.com",
-    role: "Super Admin",
-    status: "active",
-    devices: 45,
-  },
-  {
-    id: 2,
-    name: "Sarah Mohamed",
-    email: "sarah.mohamed@ipredict.com",
-    role: "Admin",
-    status: "active",
-    devices: 32,
-  },
-  {
-    id: 3,
-    name: "Khaled Ali",
-    email: "khaled.ali@ipredict.com",
-    role: "User",
-    status: "active",
-    devices: 18,
-  },
-  {
-    id: 4,
-    name: "Fatima Ibrahim",
-    email: "fatima.ibrahim@ipredict.com",
-    role: "Admin",
-    status: "inactive",
-    devices: 28,
-  },
-];
-
-const logsData = [
-  {
-    type: "Login",
-    user: "Ahmed Hassan",
-    ip: "192.168.1.105",
-    time: "2 minutes ago",
-    status: "success",
-  },
-  {
-    type: "Failed Login",
-    user: "Unknown User",
-    ip: "203.45.67.89",
-    time: "15 minutes ago",
-    status: "failed",
-  },
-  {
-    type: "Permission Change",
-    user: "Sarah Mohamed",
-    ip: "192.168.1.112",
-    time: "1 hour ago",
-    status: "success",
-  },
-  {
-    type: "Logout",
-    user: "Khaled Ali",
-    ip: "192.168.1.108",
-    time: "2 hours ago",
-    status: "success",
-  },
-  {
-    type: "Failed Login",
-    user: "admin@test.com",
-    ip: "45.67.89.123",
-    time: "3 hours ago",
-    status: "failed",
-  },
-];
+import { fetchSecurityData } from '../../services/analyticsService';
 
 // --- Sub-Components ---
 
@@ -199,10 +79,30 @@ const RoleBadge = ({ role }) => {
 // --- Main Component ---
 
 function Security() {
+  const [securityData, setSecurityData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [passwordExpiration, setPasswordExpiration] = useState(90);
   const [sessionTimeout, setSessionTimeout] = useState(30);
   const [logFilter, setLogFilter] = useState("All Events");
   const [activeDropdown, setActiveDropdown] = useState(null);
+
+  // Load security data from Firebase
+  useEffect(() => {
+    const loadSecurityData = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchSecurityData();
+        if (data) {
+          setSecurityData(data);
+        }
+      } catch (error) {
+        console.error('Error loading security data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSecurityData();
+  }, []);
 
   React.useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
@@ -211,7 +111,7 @@ function Security() {
   }, []);
 
   return (
-    <div className=" min-h-screen bg-gray-50 font-sans text-slate-800">
+    <div className="bg-gray-50 font-sans text-slate-800">
       {/* Page Header */}
       <main className="max-w-[1600px] mx-auto px-6 py-8 pb-32">
         <div className="mb-8">
@@ -223,7 +123,7 @@ function Security() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {statsData.map((stat, idx) => (
+          {[].map((stat, idx) => (
             <div
               key={idx}
               className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between h-32"
@@ -303,7 +203,7 @@ function Security() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {permissionsData.map((row, idx) => (
+                  {[].map((row, idx) => (
                     <tr key={idx} className="hover:bg-gray-50">
                       <td className="px-6 py-3 font-medium text-gray-900">
                         {row.resource}
@@ -352,7 +252,7 @@ function Security() {
               icon={Users}
             />
             <div className="space-y-4">
-              {usersData.map((user) => (
+              {[].map((user) => (
                 <div
                   key={user.id}
                   className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
@@ -503,74 +403,9 @@ function Security() {
             <AlertTriangle className="w-5 h-5 text-orange-500" />
           </div>
 
-          <div className="space-y-4">
-            {/* Warning Alert */}
-            <div className="bg-orange-50 border border-orange-100 rounded-lg p-4">
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex gap-3">
-                  <div className="p-2 bg-orange-100 rounded-lg h-fit">
-                    <AlertTriangle className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">
-                      Multiple failed login attempts from IP 203.45.67.89
-                    </h4>
-                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-                      <Clock className="w-3 h-3" />
-                      <span>15 minutes ago</span>
-                    </div>
-                  </div>
-                </div>
-                <span className="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded">
-                  WARNING
-                </span>
-              </div>
-              <div className="ml-12 mt-2">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="font-medium text-gray-900">
-                    Action Taken
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1 pl-6">
-                  IP temporarily blocked for 30 minutes
-                </p>
-              </div>
-            </div>
-
-            {/* Info Alert */}
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg h-fit">
-                    <Shield className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">
-                      Admin role permissions modified by Ahmed Hassan
-                    </h4>
-                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-                      <Clock className="w-3 h-3" />
-                      <span>1 hour ago</span>
-                    </div>
-                  </div>
-                </div>
-                <span className="bg-blue-200 text-blue-800 text-xs font-bold px-2 py-1 rounded">
-                  INFO
-                </span>
-              </div>
-              <div className="ml-12 mt-2">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="font-medium text-gray-900">
-                    Action Taken
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1 pl-6">
-                  Change logged and notifications sent
-                </p>
-              </div>
-            </div>
+          <div className="flex flex-col items-center justify-center py-10 text-gray-400">
+            <Shield className="w-10 h-10 mb-3 text-gray-300" />
+            <p className="text-sm font-medium">No active security alerts</p>
           </div>
         </div>
 
@@ -644,7 +479,7 @@ function Security() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {logsData.map((log, idx) => (
+                {[].map((log, idx) => (
                   <tr key={idx} className="hover:bg-gray-50">
                     <td className="px-4 py-4 font-medium text-gray-900">
                       {log.type}
@@ -682,26 +517,8 @@ function Security() {
             </table>
           </div>
 
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
-            <span className="text-sm text-gray-500">
-              Showing <span className="font-bold text-gray-900">1</span> to{" "}
-              <span className="font-bold text-gray-900">5</span> of{" "}
-              <span className="font-bold text-gray-900">5</span> logs
-            </span>
-            <div className="flex gap-2">
-              <button className="px-3 py-1 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">
-                Previous
-              </button>
-              <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
-                1
-              </button>
-              <button className="px-3 py-1 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">
-                2
-              </button>
-              <button className="px-3 py-1 border border-gray-200 rounded text-sm text-gray-600 hover:bg-gray-50">
-                Next
-              </button>
-            </div>
+          <div className="flex items-center justify-center mt-6 pt-4 border-t border-gray-100">
+            <span className="text-sm text-gray-400">No security logs available</span>
           </div>
         </div>
       </main>

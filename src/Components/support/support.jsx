@@ -7,7 +7,7 @@ import {
 
 function Support() {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+    <div className="bg-slate-50 font-sans text-slate-900">
       <div className="max-w-[1600px] mx-auto px-6 py-8 pb-32 space-y-8">
         
         {/* Header */}

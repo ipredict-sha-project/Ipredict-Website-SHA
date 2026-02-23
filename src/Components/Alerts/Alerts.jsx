@@ -27,178 +27,11 @@ import {
   Shield,
   FileText,
 } from "lucide-react";
-
-// --- MOCK DATA ---
-const mockAlerts = [
-  {
-    id: "ALR-2025-001",
-    severity: "Critical",
-    deviceId: "DEV-002",
-    deviceName: "Pressure Monitor B2",
-    sensorId: "SENS-003",
-    sensorType: "Pressure",
-    triggerReason: "Pressure reading exceeded maximum threshold",
-    triggeredAt: "2 minutes ago",
-    status: "New",
-    location: "Building A - Floor 3",
-    currentReading: "120 psi",
-    thresholdLimit: "100 psi",
-    rootCause: "Potential valve malfunction leading to pressure buildup.",
-    recommendedActions: [
-      "Immediately inspect valve V-102.",
-      "Check downstream equipment for stress.",
-      "Recalibrate pressure sensor if valve is functional.",
-    ],
-    impact: {
-      severity: "High",
-      affected: "1 Device, 1 Sensor",
-      priority: "Critical",
-    },
-    timeline: [{ type: "created", time: "2 minutes ago", user: null }],
-  },
-  {
-    id: "ALR-2025-002",
-    severity: "Warning",
-    deviceId: "DEV-006",
-    deviceName: "Water Flow Meter F6",
-    sensorId: "SENS-007",
-    sensorType: "Sound Sensor",
-    triggerReason: "Sound level approaching maximum threshold",
-    triggeredAt: "15 minutes ago",
-    status: "Acknowledged",
-    location: "Building F - Floor G",
-    currentReading: "82 dB",
-    thresholdLimit: "85 dB",
-    rootCause:
-      "Sensor reading exceeded configured threshold limits, indicating potential equipment stress or environmental changes.",
-    recommendedActions: [
-      "Monitor the sensor readings closely",
-      "Schedule preventive maintenance check",
-      "Review threshold configuration if needed",
-      "Alert relevant team members",
-    ],
-    impact: {
-      severity: "Medium",
-      affected: "1 Device, 1 Sensor",
-      priority: "High",
-    },
-    timeline: [
-      { type: "created", time: "15 minutes ago", user: null },
-      { type: "acknowledged", time: "10 minutes ago", user: "Ahmed Hassan" },
-    ],
-    acknowledgedBy: { user: "Ahmed Hassan", time: "10 minutes ago" },
-  },
-  {
-    id: "ALR-2025-003",
-    severity: "Critical",
-    deviceId: "DEV-003",
-    deviceName: "Humidity Detector C3",
-    sensorId: "SENS-004",
-    sensorType: "Humidity",
-    triggerReason: "Device offline - No data received",
-    triggeredAt: "1 hour ago",
-    status: "Acknowledged",
-    location: "Server Room B",
-    currentReading: "N/A",
-    thresholdLimit: "N/A",
-    rootCause:
-      "Network connectivity loss or power failure at the device endpoint.",
-    recommendedActions: [
-      "Check power supply.",
-      "Verify network cable connection.",
-      "Ping the device IP address.",
-    ],
-    impact: { severity: "High", affected: "1 Device", priority: "Critical" },
-    timeline: [
-      { type: "created", time: "1 hour ago", user: null },
-      { type: "acknowledged", time: "55 minutes ago", user: "Sarah Jenkins" },
-    ],
-    acknowledgedBy: { user: "Sarah Jenkins", time: "55 minutes ago" },
-  },
-  {
-    id: "ALR-2025-004",
-    severity: "Warning",
-    deviceId: "DEV-001",
-    deviceName: "Temperature Sensor A1",
-    sensorId: "SENS-001",
-    sensorType: "Temperature",
-    triggerReason: "Temperature fluctuation detected",
-    triggeredAt: "2 hours ago",
-    status: "Resolved",
-    location: "Cold Storage Unit 1",
-    currentReading: "4.5°C",
-    thresholdLimit: "2°C - 8°C range",
-    rootCause: "Temporary door opening caused minor temperature spike.",
-    recommendedActions: [
-      "Ensure door is closed properly.",
-      "Monitor for persistent fluctuations.",
-    ],
-    impact: {
-      severity: "Low",
-      affected: "1 Device, 1 Sensor",
-      priority: "Medium",
-    },
-    timeline: [
-      { type: "created", time: "2 hours ago" },
-      { type: "acknowledged", time: "1.5 hours ago", user: "Mike Brown" },
-      { type: "resolved", time: "1 hour ago", user: "Mike Brown" },
-    ],
-    acknowledgedBy: { user: "Mike Brown", time: "1.5 hours ago" },
-  },
-  {
-    id: "ALR-2025-005",
-    severity: "Info",
-    deviceId: "DEV-005",
-    deviceName: "Air Quality Monitor E5",
-    sensorId: "SENS-006",
-    sensorType: "Gas",
-    triggerReason: "Routine maintenance reminder",
-    triggeredAt: "3 hours ago",
-    status: "New",
-    location: "Main Lobby",
-    currentReading: "Normal",
-    thresholdLimit: "N/A",
-    rootCause: "Scheduled maintenance interval reached.",
-    recommendedActions: [
-      "Perform routine sensor cleaning.",
-      "Run diagnostic tests.",
-    ],
-    impact: { severity: "None", affected: "1 Device", priority: "Low" },
-    timeline: [{ type: "created", time: "3 hours ago" }],
-  },
-  {
-    id: "ALR-2025-006",
-    severity: "Critical",
-    deviceId: "DEV-007",
-    deviceName: "Light Intensity Sensor G7",
-    sensorId: "SENS-008",
-    sensorType: "Vibration",
-    triggerReason: "Excessive vibration detected - Possible equipment failure",
-    triggeredAt: "4 hours ago",
-    status: "Resolved",
-    location: "Production Line 2",
-    currentReading: "15 mm/s",
-    thresholdLimit: "10 mm/s",
-    rootCause: "Loose mounting bolt on the conveyor motor.",
-    recommendedActions: [
-      "Tighten mounting bolts.",
-      "Check for damage to the motor base.",
-    ],
-    impact: {
-      severity: "High",
-      affected: "1 Device, 1 Sensor",
-      priority: "Critical",
-    },
-    timeline: [
-      { type: "created", time: "4 hours ago" },
-      { type: "acknowledged", time: "3.5 hours ago", user: "Ali Khan" },
-      { type: "resolved", time: "3 hours ago", user: "Ali Khan" },
-    ],
-    acknowledgedBy: { user: "Ali Khan", time: "3.5 hours ago" },
-  },
-];
+import { fetchAlerts } from '../../services/analyticsService';
 
 function Alerts() {
+  const [alerts, setAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedAlert, setSelectedAlert] = useState(null);
 
   // Dropdown States
@@ -209,6 +42,23 @@ function Alerts() {
   const [severityFilter, setSeverityFilter] = useState("All Severity");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [sortOrder, setSortOrder] = useState("Newest");
+
+  // Fetch alerts from Firebase
+  useEffect(() => {
+    const loadAlerts = async () => {
+      setLoading(true);
+      try {
+        const alertsData = await fetchAlerts(100);
+        setAlerts(alertsData);
+      } catch (error) {
+        console.error('Error loading alerts:', error);
+        setAlerts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAlerts();
+  }, []);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -236,9 +86,7 @@ function Alerts() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 relative">
-      {/* --- GLOBAL HEADER --- */}
-
+    <div className="bg-slate-50 font-sans text-slate-900 relative">
       {/* --- Main Content --- */}
       <main className="max-w-[1600px] mx-auto px-6 py-8 pb-32">
         <div className="flex justify-between items-start mb-8">
@@ -374,10 +222,23 @@ function Alerts() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {mockAlerts.map((alert) => (
-                <tr
-                  key={alert.id}
-                  onClick={() => setSelectedAlert(alert)}
+              {loading ? (
+                <tr>
+                  <td colSpan="8" className="px-6 py-8 text-center text-slate-500">
+                    Loading alerts...
+                  </td>
+                </tr>
+              ) : alerts.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="px-6 py-8 text-center text-slate-500">
+                    No alerts found
+                  </td>
+                </tr>
+              ) : (
+                alerts.map((alert) => (
+                  <tr
+                    key={alert.id}
+                    onClick={() => setSelectedAlert(alert)}
                   className="hover:bg-slate-50 cursor-pointer transition-colors"
                 >
                   <td className="px-6 py-4 font-medium text-slate-900">
@@ -460,22 +321,24 @@ function Alerts() {
                     )}
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
           {/* Pagination */}
           <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <div className="text-sm text-slate-500">
-              Showing 1 to 6 of 6 alerts
+              Showing <span className="font-medium text-slate-900">{alerts.length > 0 ? 1 : 0}</span>–<span className="font-medium text-slate-900">{alerts.length}</span> of{" "}
+              <span className="font-medium text-slate-900">{alerts.length}</span> alerts
             </div>
             <div className="flex gap-2">
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Previous
               </button>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
                 1
               </button>
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Next
               </button>
             </div>

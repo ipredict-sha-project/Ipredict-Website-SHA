@@ -29,7 +29,7 @@ const VibrationChart = () => {
     datasets: [
       {
         label: 'Vibration Level',
-        data: [0.5, 0.7, 0.4, 0.6, 0.8, 1.2, 1.5, 1.8, 1.4, 1.0, 0.8, 0.6],
+        data: [],
         borderColor: '#f59e0b',
         backgroundColor: 'rgba(245, 158, 11, 0.1)',
         borderWidth: 3,

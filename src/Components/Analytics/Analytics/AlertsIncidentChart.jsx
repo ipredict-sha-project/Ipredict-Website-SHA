@@ -24,19 +24,19 @@ const AlertsIncidentChart = () => {
     datasets: [
       {
         label: 'Info',
-        data: [12, 16, 19, 13, 24, 18, 14],
+        data: [],
         backgroundColor: '#2962ff',
         borderRadius: 4,
       },
       {
         label: 'Warning',
-        data: [12, 9, 16, 11, 19, 13, 11],
+        data: [],
         backgroundColor: '#ff6900',
         borderRadius: 4,
       },
       {
         label: 'Critical',
-        data: [8, 6, 8, 7, 10, 7, 7],
+        data: [],
         backgroundColor: '#fb2c36',
         borderRadius: 4,
       },

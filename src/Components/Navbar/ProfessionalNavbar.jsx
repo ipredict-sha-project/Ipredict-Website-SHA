@@ -1,25 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './ProfessionalNavbar.css';
+import { 
+  Menu, ChevronDown, Search, Bell, LayoutDashboard,
+  BarChart3, FileText, Users, Cpu, Radio, 
+  AlertCircle, Shield, Settings, HelpCircle 
+} from 'lucide-react';
 
-// Top Bar Icons
-const iconMenu = "https://www.figma.com/api/mcp/asset/fceaff7c-d87b-4575-b548-72432be93910";
-const iconChevron = "https://www.figma.com/api/mcp/asset/63cb7c1e-0a38-4d96-9bbc-5082ae044069";
-const iconSearch = "https://www.figma.com/api/mcp/asset/fd877b0e-d06e-4005-94bb-bc72b8fb5f8b";
-const iconBell = "https://www.figma.com/api/mcp/asset/e285bfc5-3989-4ffd-9722-3d4bc8305665";
-const iconDashboardBadge = "https://www.figma.com/api/mcp/asset/c6c7aa63-cdba-4e93-be45-4cb3797835ec";
-
-// Menu Item Icons
-const iconDashboard = "https://www.figma.com/api/mcp/asset/4d2f361f-dd01-406d-ac81-f77145aa5de7";
-const iconAnalytics = "https://www.figma.com/api/mcp/asset/15c13034-5415-4dbe-8d3a-1a3726383757";
-const iconReports = "https://www.figma.com/api/mcp/asset/c015e0a1-c72a-49af-b525-735c24f70585";
-const iconUsers = "https://www.figma.com/api/mcp/asset/ed408a5e-c7d9-4f8d-a2df-dd2d1753e4d0";
-const iconDevices = "https://www.figma.com/api/mcp/asset/ce1bdb17-577a-4e1b-b8c2-21e020c48a8a";
-const iconSensors = "https://www.figma.com/api/mcp/asset/07d5f830-30fd-4944-9245-6cb917e58e12";
-const iconAlerts = "https://www.figma.com/api/mcp/asset/3bef10d6-8dd9-4e4e-befb-7c1bc61a76d5";
-const iconSecurity = "https://www.figma.com/api/mcp/asset/a5cc48fe-e2dc-458c-a976-7bf7bc9bb4f0";
-const iconSettings = "https://www.figma.com/api/mcp/asset/7d060d96-b390-44b3-9a93-313b7979128f";
-const iconSupport = "https://www.figma.com/api/mcp/asset/eb72c4e5-a775-4841-99d8-6c649aaa5911";
+// Icon mapping for menu items
+const iconMap = {
+  dashboard: LayoutDashboard,
+  analytics: BarChart3,
+  reports: FileText,
+  users: Users,
+  devices: Cpu,
+  sensors: Radio,
+  alerts: AlertCircle,
+  security: Shield,
+  settings: Settings,
+  support: HelpCircle
+};
 
 const ProfessionalNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,25 +31,25 @@ const ProfessionalNavbar = () => {
     {
       title: 'OVERVIEW',
       items: [
-        { path: '/dashboard', label: 'Dashboard', icon: iconDashboard, desc: 'System overview & real-time metrics' },
-        { path: '/analytics', label: 'Analytics', icon: iconAnalytics, desc: 'Data insights & performance trends' },
-        { path: '/reports', label: 'Reports', icon: iconReports, desc: 'Generate & export reports' },
+        { path: '/dashboard', label: 'Dashboard', icon: 'dashboard', desc: 'System overview & real-time metrics' },
+        { path: '/analytics', label: 'Analytics', icon: 'analytics', desc: 'Data insights & performance trends' },
+        { path: '/reports', label: 'Reports', icon: 'reports', desc: 'Generate & export reports' },
       ]
     },
     {
       title: 'MANAGEMENT',
       items: [
-        { path: '/users', label: 'Users', icon: iconUsers, desc: 'Manage user accounts & roles', badge: '1.2K', badgeColor: '#eff6ff', badgeText: '#155dfc' },
-        { path: '/devices', label: 'Devices', icon: iconDevices, desc: 'Connected devices & hardware', badge: '3.5K', badgeColor: '#faf5ff', badgeText: '#9810fa' },
-        { path: '/sensors', label: 'Sensors', icon: iconSensors, desc: 'Sensor network & monitoring', badge: '8.7K', badgeColor: '#ecfdf5', badgeText: '#096' },
-        { path: '/alerts', label: 'Alerts', icon: iconAlerts, desc: 'Active alerts & notifications', badge: '24', badgeColor: '#fef2f2', badgeText: '#e7000b' },
+        { path: '/users', label: 'Users', icon: 'users', desc: 'Manage user accounts & roles' },
+        { path: '/devices', label: 'Devices', icon: 'devices', desc: 'Connected devices & hardware' },
+        { path: '/sensors', label: 'Sensors', icon: 'sensors', desc: 'Sensor network & monitoring' },
+        { path: '/alerts', label: 'Alerts', icon: 'alerts', desc: 'Active alerts & notifications' },
       ]
     },
     {
       title: 'SYSTEM',
       items: [
-        { path: '/security', label: 'Security', icon: iconSecurity, desc: 'Access control & permissions' },
-        { path: '/settings', label: 'Settings', icon: iconSettings, desc: 'System configuration & preferences' },
+        { path: '/security', label: 'Security', icon: 'security', desc: 'Access control & permissions' },
+        { path: '/settings', label: 'Settings', icon: 'settings', desc: 'System configuration & preferences' },
       ]
     }
   ];
@@ -100,9 +100,9 @@ const ProfessionalNavbar = () => {
           </div>
           <div className="menu-wrapper" ref={menuRef}>
             <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
-              <img src={iconMenu} alt="" className="icon-menu" />
+              <Menu className="icon-menu" size={20} />
               <span className="button-text">Main Menu</span>
-              <img src={iconChevron} alt="" className={`icon-chevron ${menuOpen ? 'rotated' : ''}`} />
+              <ChevronDown className={`icon-chevron ${menuOpen ? 'rotated' : ''}`} size={16} />
             </button>
             {menuOpen && (
               <div className="menu-dropdown">
@@ -121,31 +121,27 @@ const ProfessionalNavbar = () => {
                     <div key={section.title} className="menu-section">
                       <div className="menu-section-title">{section.title}</div>
                       <div className="menu-section-items">
-                        {section.items.map((item) => (
-                          <button
-                            key={item.path}
-                            className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
-                            onClick={() => handleNavigation(item.path)}
-                          >
-                            <div className="menu-item-icon-wrapper">
-                              <img src={item.icon} alt="" className="menu-item-icon-img" />
-                            </div>
-                            <div className="menu-item-content">
-                              <div className="menu-item-title-row">
-                                <span className="menu-item-label">{item.label}</span>
-                                {item.badge && (
-                                  <span className="menu-item-badge" style={{backgroundColor: item.badgeColor, color: item.badgeText}}>
-                                    {item.badge}
-                                  </span>
-                                )}
+                        {section.items.map((item) => {
+                          const IconComponent = iconMap[item.icon];
+                          return (
+                            <button
+                              key={item.path}
+                              className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
+                              onClick={() => handleNavigation(item.path)}
+                            >
+                              <div className="menu-item-icon-wrapper">
+                                <IconComponent className="menu-item-icon-img" size={20} />
                               </div>
-                              <p className="menu-item-desc">{item.desc}</p>
-                            </div>
-                            {location.pathname === item.path && (
-                              <div className="menu-item-indicator"></div>
-                            )}
-                          </button>
-                        ))}
+                              <div className="menu-item-content">
+                                <span className="menu-item-label">{item.label}</span>
+                                <p className="menu-item-desc">{item.desc}</p>
+                              </div>
+                              {location.pathname === item.path && (
+                                <div className="menu-item-indicator"></div>
+                              )}
+                            </button>
+                          );
+                        })}
                       </div>
                       {sectionIdx < menuSections.length - 1 && <div className="menu-divider"></div>}
                     </div>
@@ -155,7 +151,7 @@ const ProfessionalNavbar = () => {
                 <div className="menu-footer">
                   <button className="menu-support-btn" onClick={() => handleNavigation('/support')}>
                     <div className="menu-support-icon">
-                      <img src={iconSupport} alt="" className="menu-item-icon-img" />
+                      <HelpCircle className="menu-item-icon-img" size={20} />
                     </div>
                     <span className="menu-support-text">Get Support & Help</span>
                   </button>
@@ -165,12 +161,12 @@ const ProfessionalNavbar = () => {
             )}
           </div>
           <div className="page-badge">
-            <img src={iconDashboardBadge} alt="" className="badge-icon" />
+            <LayoutDashboard className="badge-icon" size={18} />
             <span className="badge-text">{getCurrentPageName()}</span>
           </div>
         </div>
         <div className="top-bar-center">
-          <img src={iconSearch} alt="" className="search-icon" />
+          <Search className="search-icon" size={18} />
           <input 
             type="text" 
             placeholder="Search devices, alerts, users..." 
@@ -179,14 +175,14 @@ const ProfessionalNavbar = () => {
         </div>
         <div className="top-bar-right">
           <button className="notification-button">
-            <img src={iconBell} alt="" className="bell-icon" />
+            <Bell className="bell-icon" size={20} />
             <span className="notification-dot"></span>
           </button>
           <button className="user-button">
             <div className="user-avatar">
               <span>AD</span>
             </div>
-            <img src={iconChevron} alt="" className="icon-chevron" />
+            <ChevronDown className="icon-chevron" size={16} />
           </button>
         </div>
       </div>

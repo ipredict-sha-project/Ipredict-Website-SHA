@@ -25,167 +25,13 @@ import {
   LogOut,
   AlertTriangle,
 } from "lucide-react";
-
-// --- MOCK DATA ---
-const mockUsers = [
-  {
-    id: 1,
-    name: "Ahmed Hassan",
-    email: "ahmed.hassan@ipredict.com",
-    role: "Admin",
-    initials: "AH",
-    color: "bg-blue-600",
-    assignedDevicesCount: 12,
-    status: "Active",
-    lastLogin: "2 hours ago",
-    created: "Jan 15, 2025",
-  },
-  {
-    id: 2,
-    name: "Sarah Mohamed",
-    email: "sarah.mohamed@ipredict.com",
-    role: "Technician",
-    initials: "SM",
-    color: "bg-blue-600",
-    assignedDevicesCount: 8,
-    status: "Active",
-    lastLogin: "1 day ago",
-    created: "Jan 20, 2025",
-  },
-  {
-    id: 3,
-    name: "Khaled Ali",
-    email: "khaled.ali@ipredict.com",
-    role: "Technician",
-    initials: "KA",
-    color: "bg-blue-600",
-    assignedDevicesCount: 15,
-    status: "Active",
-    lastLogin: "5 mins ago",
-    created: "Feb 02, 2025",
-  },
-  {
-    id: 4,
-    name: "Fatima Ibrahim",
-    email: "fatima.ibrahim@ipredict.com",
-    role: "Technician",
-    initials: "FI",
-    color: "bg-blue-600",
-    assignedDevicesCount: 6,
-    status: "Active",
-    lastLogin: "3 hours ago",
-    created: "Feb 10, 2025",
-  },
-  {
-    id: 5,
-    name: "Omar Youssef",
-    email: "omar.youssef@ipredict.com",
-    role: "Technician",
-    initials: "OY",
-    color: "bg-blue-600",
-    assignedDevicesCount: 10,
-    status: "Disabled",
-    lastLogin: "2 weeks ago",
-    created: "Jan 05, 2025",
-  },
-  {
-    id: 6,
-    name: "Layla Mahmoud",
-    email: "layla.mahmoud@ipredict.com",
-    role: "Technician",
-    initials: "LM",
-    color: "bg-blue-600",
-    assignedDevicesCount: 7,
-    status: "Active",
-    lastLogin: "4 hours ago",
-    created: "Feb 12, 2025",
-  },
-  {
-    id: 7,
-    name: "Tarek Ahmed",
-    email: "tarek.ahmed@ipredict.com",
-    role: "Admin",
-    initials: "TA",
-    color: "bg-blue-600",
-    assignedDevicesCount: 20,
-    status: "Active",
-    lastLogin: "30 min ago",
-    created: "Jan 10, 2025",
-  },
-  {
-    id: 8,
-    name: "Nour Salah",
-    email: "nour.salah@ipredict.com",
-    role: "Technician",
-    initials: "NS",
-    color: "bg-blue-600",
-    assignedDevicesCount: 5,
-    status: "Active",
-    lastLogin: "6 hours ago",
-    created: "Feb 18, 2025",
-  },
-];
-
-const mockAvailableDevices = [
-  {
-    id: "DEV-001",
-    name: "Temperature Sensor A1",
-    type: "Temperature",
-    status: "Online",
-    assigned: true,
-  },
-  {
-    id: "DEV-002",
-    name: "Pressure Sensor B2",
-    type: "Pressure",
-    status: "Online",
-    assigned: true,
-  },
-  {
-    id: "DEV-003",
-    name: "Humidity Sensor C3",
-    type: "Humidity",
-    status: "Offline",
-    assigned: true,
-  },
-  {
-    id: "DEV-004",
-    name: "Motion Detector D4",
-    type: "Motion",
-    status: "Online",
-    assigned: true,
-  },
-  {
-    id: "DEV-005",
-    name: "Air Quality Monitor E5",
-    type: "Air Quality",
-    status: "Online",
-    assigned: false,
-  },
-  {
-    id: "DEV-006",
-    name: "Water Flow Meter F6",
-    type: "Flow",
-    status: "Offline",
-    assigned: false,
-  },
-  {
-    id: "DEV-007",
-    name: "Light Sensor G7",
-    type: "Light",
-    status: "Online",
-    assigned: false,
-  },
-  {
-    id: "DEV-008",
-    name: "Smoke Detector H8",
-    type: "Safety",
-    status: "Online",
-    assigned: false,
-  },
-];
+import { fetchUsers } from '../../services/analyticsService';
 
 function Users() {
+  // Data State
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   // Modal States
   const [activeModal, setActiveModal] = useState(null); // 'add', 'edit', 'details', 'manage_devices'
   const [selectedUser, setSelectedUser] = useState(null);
@@ -193,6 +39,23 @@ function Users() {
   // Dropdown States
   const [activeDropdown, setActiveDropdown] = useState(null); // 'role', 'status', 'sort', 'profile'
   const [activeRowMenu, setActiveRowMenu] = useState(null); // Track which row's menu is open
+
+  // Fetch users from Firebase
+  useEffect(() => {
+    const loadUsers = async () => {
+      setLoading(true);
+      try {
+        const usersData = await fetchUsers();
+        setUsers(usersData);
+      } catch (error) {
+        console.error('Error loading users:', error);
+        setUsers([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUsers();
+  }, []);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -228,7 +91,7 @@ function Users() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 relative">
+    <div className="bg-slate-50 font-sans text-slate-900 relative">
       {/* --- Main Content --- */}
       <main className="max-w-[1600px] mx-auto px-6 py-8 pb-32">
         <div className="flex justify-between items-start mb-8">
@@ -251,10 +114,10 @@ function Users() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <StatCard label="TOTAL USERS" value="8" />
-          <StatCard label="ACTIVE USERS" value="7" color="text-emerald-500" />
-          <StatCard label="DISABLED USERS" value="1" color="text-slate-400" />
-          <StatCard label="ADMINS" value="2" color="text-purple-600" />
+          <StatCard label="TOTAL USERS" value={users.length} />
+          <StatCard label="ACTIVE USERS" value={users.filter(u => u.status === "Active").length} color="text-emerald-500" />
+          <StatCard label="DISABLED USERS" value={users.filter(u => u.status === "Disabled").length} color="text-slate-400" />
+          <StatCard label="ADMINS" value={users.filter(u => u.role === "Admin").length} color="text-purple-600" />
         </div>
 
         {/* Filters */}
@@ -314,12 +177,25 @@ function Users() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {mockUsers.map((user) => (
-                <tr
-                  key={user.id}
-                  onClick={() => openUserDetails(user)}
-                  className="hover:bg-slate-50 cursor-pointer transition-colors group"
-                >
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                    Loading users...
+                  </td>
+                </tr>
+              ) : users.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                    No users found
+                  </td>
+                </tr>
+              ) : (
+                users.map((user) => (
+                  <tr
+                    key={user.id}
+                    onClick={() => openUserDetails(user)}
+                    className="hover:bg-slate-50 cursor-pointer transition-colors group"
+                  >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div
@@ -387,28 +263,25 @@ function Users() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
 
           {/* Pagination */}
           <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <div className="text-sm text-slate-500">
-              Showing <span className="font-medium text-slate-900">1</span>-{" "}
-              <span className="font-medium text-slate-900">8</span> of{" "}
-              <span className="font-medium text-slate-900">8</span> users
+              Showing <span className="font-medium text-slate-900">{users.length > 0 ? 1 : 0}</span>–<span className="font-medium text-slate-900">{users.length}</span> of{" "}
+              <span className="font-medium text-slate-900">{users.length}</span> users
             </div>
             <div className="flex gap-2">
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Previous
               </button>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm shadow-blue-200">
                 1
               </button>
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
-                2
-              </button>
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Next
               </button>
             </div>
@@ -425,8 +298,8 @@ function Users() {
           subtitle="Create a new user account with role and permissions"
           onClose={closeModal}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-w-0">
+            <div className="space-y-6 min-w-0">
               <Section
                 title="Basic Information"
                 subtitle="User account details"
@@ -443,29 +316,29 @@ function Users() {
                 icon={Key}
                 iconColor="text-orange-500 bg-orange-50"
               >
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-4 border border-slate-200 rounded-xl bg-slate-50/50">
-                    <div className="p-1 bg-blue-600 rounded-full text-white mt-0.5">
+                <div className="space-y-4 w-full">
+                  <div className="flex items-start gap-3 p-4 border border-slate-200 rounded-xl bg-slate-50/50 w-full">
+                    <div className="p-1 bg-blue-600 rounded-full text-white mt-0.5 flex-shrink-0">
                       <Check className="w-3 h-3" />
                     </div>
-                    <div>
-                      <div className="font-bold text-sm text-slate-900">
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <div className="font-bold text-sm text-slate-900" style={{wordBreak: 'break-word'}}>
                         Auto-generate Password
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-500" style={{wordBreak: 'break-word'}}>
                         System will create a secure temporary password
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-4 border border-slate-200 rounded-xl bg-white">
-                    <div className="p-1 bg-white border border-slate-300 rounded-full mt-0.5 text-transparent">
+                  <div className="flex items-start gap-3 p-4 border border-slate-200 rounded-xl bg-white w-full">
+                    <div className="p-1 bg-white border border-slate-300 rounded-full mt-0.5 text-transparent flex-shrink-0">
                       <Check className="w-3 h-3" />
                     </div>
-                    <div>
-                      <div className="font-bold text-sm text-slate-900">
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <div className="font-bold text-sm text-slate-900" style={{wordBreak: 'break-word'}}>
                         Force Password Reset
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-500" style={{wordBreak: 'break-word'}}>
                         User must change password on first login
                       </div>
                     </div>
@@ -474,7 +347,7 @@ function Users() {
               </Section>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0">
               <Section
                 title="Role & Permissions"
                 subtitle="Access level and status"
@@ -573,9 +446,9 @@ function Users() {
           <div className="flex flex-col h-full">
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto mb-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-w-0">
                 {/* Left Column */}
-                <div className="space-y-6">
+                <div className="space-y-6 min-w-0">
                   <Section
                     title="User Information"
                     subtitle="Account details and role"
@@ -657,7 +530,7 @@ function Users() {
                 </div>
 
                 {/* Right Column */}
-                <div className="space-y-6">
+                <div className="space-y-6 min-w-0">
                   <div className="border border-slate-200 rounded-2xl p-6 bg-white flex flex-col">
                     <div className="flex justify-between items-start mb-6">
                       <div className="flex items-center gap-3">
@@ -769,26 +642,26 @@ function Users() {
             <div className="grid grid-cols-3 gap-4 mb-4">
               <SummaryPill
                 label="Total Devices"
-                value="8"
+                value="–"
                 icon={Smartphone}
                 color="text-blue-600 bg-blue-50"
               />
               <SummaryPill
                 label="Selected"
-                value="4"
+                value="–"
                 icon={CheckCircle}
                 color="text-emerald-600 bg-emerald-50"
               />
               <SummaryPill
                 label="Available"
-                value="4"
+                value="–"
                 icon={Radio}
                 color="text-purple-600 bg-purple-50"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto p-1">
-              {mockAvailableDevices.map((device) => (
+              {[].map((device) => (
                 <div
                   key={device.id}
                   className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex items-start gap-4 ${device.assigned ? "border-blue-500 bg-blue-50/30" : "border-slate-100 hover:border-blue-200 bg-white"}`}
@@ -861,8 +734,8 @@ function Users() {
           icon="edit"
           onClose={closeModal}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-w-0">
+            <div className="space-y-6 min-w-0">
               <Section
                 title="Basic Information"
                 subtitle="User account details"
@@ -874,7 +747,7 @@ function Users() {
               </Section>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0">
               <Section
                 title="Role & Permissions"
                 subtitle="Access level and status"
@@ -1212,7 +1085,7 @@ function ModalLayout({
           </button>
         </div>
         {/* Scrollable Content */}
-        <div className="p-8 overflow-y-auto flex-1 bg-white">{children}</div>
+        <div className="p-8 overflow-y-auto overflow-x-hidden flex-1 bg-white">{children}</div>
       </div>
     </div>
   );
@@ -1220,26 +1093,28 @@ function ModalLayout({
 
 function Section({ title, subtitle, icon: Icon, iconColor, children }) {
   return (
-    <div className="border border-slate-200 rounded-2xl p-6 h-full">
+    <div className="border border-slate-200 rounded-2xl p-6 h-full min-w-0">
       <div className="flex items-center gap-3 mb-6">
         <div
-          className={`w-10 h-10 rounded-xl ${iconColor} flex items-center justify-center`}
+          className={`w-10 h-10 rounded-xl ${iconColor} flex items-center justify-center flex-shrink-0`}
         >
           <Icon className="w-5 h-5" />
         </div>
-        <div>
-          <h4 className="font-bold text-slate-900">{title}</h4>
-          <p className="text-xs text-slate-500">{subtitle}</p>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-bold text-slate-900 overflow-wrap-anywhere">{title}</h4>
+          <p className="text-xs text-slate-500 overflow-wrap-anywhere">{subtitle}</p>
         </div>
       </div>
-      {children}
+      <div className="min-w-0">
+        {children}
+      </div>
     </div>
   );
 }
 
 function Input({ label, value, placeholder }) {
   return (
-    <div>
+    <div className="min-w-0">
       <label className="block text-sm font-semibold text-slate-700 mb-2">
         {label}
       </label>

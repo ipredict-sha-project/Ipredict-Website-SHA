@@ -23,147 +23,13 @@ import {
   Trash,
   ChevronDown,
 } from "lucide-react";
-
-// --- MOCK DATA ---
-const mockDevices = [
-  {
-    id: "DEV-001",
-    name: "Temperature Sensor A1",
-  },
-  {
-    id: "DEV-002",
-    name: "Pressure Monitor B2",
-  },
-  {
-    id: "DEV-003",
-    name: "Humidity Detector C3",
-  },
-  {
-    id: "DEV-004",
-    name: "Motion Sensor D4",
-  },
-  {
-    id: "DEV-005",
-    name: "Air Quality Monitor E5",
-  },
-  {
-    id: "DEV-006",
-    name: "Water Flow Meter F6",
-  },
-  {
-    id: "DEV-007",
-    name: "Light Intensity Sensor G7",
-  },
-  {
-    id: "DEV-008",
-    name: "Smoke Detector H8",
-  },
-];
-
-const mockSensors = [
-  {
-    id: "SENS-001",
-    type: "Temperature",
-    device: "DEV-001",
-    deviceName: "Temperature Sensor A1",
-    status: "Active",
-    reading: "22.5°C",
-    updated: "2 minutes ago",
-    location: "Building A - Floor 1",
-  },
-  {
-    id: "SENS-002",
-    type: "Vibration",
-    device: "DEV-001",
-    deviceName: "Temperature Sensor A1",
-    status: "Active",
-    reading: "0.3 mm/s",
-    updated: "3 minutes ago",
-    location: "Building A - Floor 1",
-  },
-  {
-    id: "SENS-003",
-    type: "Pressure",
-    device: "DEV-002",
-    deviceName: "Pressure Monitor B2",
-    status: "Warning",
-    reading: "95.2 kPa",
-    updated: "5 minutes ago",
-    location: "Building B - Basement",
-  },
-  {
-    id: "SENS-004",
-    type: "Humidity",
-    device: "DEV-003",
-    deviceName: "Humidity Detector C3",
-    status: "Offline",
-    reading: "65%",
-    updated: "2 hours ago",
-    location: "Server Room",
-  },
-  {
-    id: "SENS-005",
-    type: "Temperature",
-    device: "DEV-004",
-    deviceName: "Motion Sensor D4",
-    status: "Active",
-    reading: "24.1°C",
-    updated: "1 minute ago",
-    location: "Corridor East",
-  },
-  {
-    id: "SENS-006",
-    type: "Gas",
-    device: "DEV-005",
-    deviceName: "Air Quality Monitor E5",
-    status: "Active",
-    reading: "450 ppm",
-    updated: "30 seconds ago",
-    location: "Lab 3",
-  },
-  {
-    id: "SENS-007",
-    type: "Sound",
-    device: "DEV-006",
-    deviceName: "Water Flow Meter F6",
-    status: "Warning",
-    reading: "78 dB",
-    updated: "4 minutes ago",
-    location: "Pump Station",
-  },
-  {
-    id: "SENS-008",
-    type: "Vibration",
-    device: "DEV-007",
-    deviceName: "Light Intensity Sensor G7",
-    status: "Active",
-    reading: "0.5 mm/s",
-    updated: "2 minutes ago",
-    location: "Production Line 1",
-  },
-  {
-    id: "SENS-009",
-    type: "Temperature",
-    device: "DEV-008",
-    deviceName: "Smoke Detector H8",
-    status: "Active",
-    reading: "21.8°C",
-    updated: "1 minute ago",
-    location: "Storage Area",
-  },
-  {
-    id: "SENS-010",
-    type: "Humidity",
-    device: "DEV-002",
-    deviceName: "Pressure Monitor B2",
-    status: "Active",
-    reading: "55%",
-    updated: "3 minutes ago",
-    location: "Building B - Basement",
-  },
-];
+import { fetchSensors } from '../../services/analyticsService';
 
 function Sensors() {
+  // Data State
+  const [sensors, setSensors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedSensor, setSelectedSensor] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -173,6 +39,23 @@ function Sensors() {
 
   // State for Filter Dropdowns
   const [activeFilter, setActiveFilter] = useState(null);
+
+  // Fetch sensors from Firebase
+  useEffect(() => {
+    const loadSensors = async () => {
+      setLoading(true);
+      try {
+        const sensorsData = await fetchSensors();
+        setSensors(sensorsData);
+      } catch (error) {
+        console.error('Error loading sensors:', error);
+        setSensors([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSensors();
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -222,7 +105,7 @@ function Sensors() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 relative">
+    <div className="bg-slate-50 font-sans text-slate-900 relative">
       {/* --- Main Content --- */}
       <main className="max-w-[1600px] mx-auto px-6 py-8 pb-32">
         <div className="flex justify-between items-start mb-8">
@@ -243,10 +126,10 @@ function Sensors() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <StatCard label="TOTAL SENSORS" value="10" />
-          <StatCard label="ACTIVE SENSORS" value="7" color="text-emerald-500" />
-          <StatCard label="WARNING SENSORS" value="2" color="text-orange-500" />
-          <StatCard label="OFFLINE SENSORS" value="1" color="text-slate-400" />
+          <StatCard label="TOTAL SENSORS" value={sensors.length} />
+          <StatCard label="ACTIVE SENSORS" value={sensors.filter(s => s.status === "Active").length} color="text-emerald-500" />
+          <StatCard label="WARNING SENSORS" value={sensors.filter(s => s.status === "Warning").length} color="text-orange-500" />
+          <StatCard label="OFFLINE SENSORS" value={sensors.filter(s => s.status === "Offline").length} color="text-slate-400" />
         </div>
 
         {/* Filters */}
@@ -315,12 +198,25 @@ function Sensors() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {mockSensors.map((sensor) => (
-                <tr
-                  key={sensor.id}
-                  onClick={() => handleRowClick(sensor)}
-                  className="hover:bg-slate-50 cursor-pointer transition-colors group"
-                >
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                    Loading sensors...
+                  </td>
+                </tr>
+              ) : sensors.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-8 text-center text-slate-500">
+                    No sensors found
+                  </td>
+                </tr>
+              ) : (
+                sensors.map((sensor) => (
+                  <tr
+                    key={sensor.id}
+                    onClick={() => handleRowClick(sensor)}
+                    className="hover:bg-slate-50 cursor-pointer transition-colors group"
+                  >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-slate-200">
@@ -399,28 +295,25 @@ function Sensors() {
                     )}
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
 
           {/* Pagination */}
           <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <div className="text-sm text-slate-500">
-              Showing <span className="font-medium text-slate-900">1</span> to{" "}
-              <span className="font-medium text-slate-900">10</span> of{" "}
-              <span className="font-medium text-slate-900">10</span> sensors
+              Showing <span className="font-medium text-slate-900">{sensors.length > 0 ? 1 : 0}</span>–<span className="font-medium text-slate-900">{sensors.length}</span> of{" "}
+              <span className="font-medium text-slate-900">{sensors.length}</span> sensors
             </div>
             <div className="flex gap-2">
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Previous
               </button>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm shadow-blue-200">
                 1
               </button>
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
-                2
-              </button>
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Next
               </button>
             </div>
@@ -536,7 +429,7 @@ function SensorIcon({ type }) {
 
 function AddSensorModal({ onClose }) {
   // Create device options with names for the dropdown
-  const deviceOptions = mockDevices.map((dev) => `${dev.id} - ${dev.name}`);
+  const deviceOptions = [];
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -929,18 +822,10 @@ function SensorDetailsModal({ sensor, onClose, onEdit }) {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-4">
-                <DetailStat
-                  label="Average (24h)"
-                  value="22.7 °C"
-                  icon={Activity}
-                />
-                <DetailStat label="Variance" value="±1.2 °C" icon={Signal} />
-                <DetailStat
-                  label="Peak Value"
-                  value="24.1 °C"
-                  icon={ArrowRight}
-                />
-                <DetailStat label="Uptime" value="99.8%" icon={Clock} />
+                <DetailStat label="Average (24h)" value="–" icon={Activity} />
+                <DetailStat label="Variance" value="–" icon={Signal} />
+                <DetailStat label="Peak Value" value="–" icon={ArrowRight} />
+                <DetailStat label="Uptime" value="–" icon={Clock} />
               </div>
             </div>
 
@@ -950,27 +835,7 @@ function SensorDetailsModal({ sensor, onClose, onEdit }) {
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                 <h4 className="font-bold text-slate-900 mb-4">Recent Alerts</h4>
                 <div className="space-y-4">
-                  <AlertItem
-                    icon={AlertTriangle}
-                    color="text-orange-500 bg-orange-50 border-orange-100"
-                    title="Threshold Warning"
-                    desc="Reading approaching maximum threshold"
-                    time="2 hours ago"
-                  />
-                  <AlertItem
-                    icon={CheckCircle}
-                    color="text-emerald-500 bg-emerald-50 border-emerald-100"
-                    title="Reading Normalized"
-                    desc="Sensor reading returned to normal range"
-                    time="5 hours ago"
-                  />
-                  <AlertItem
-                    icon={Activity}
-                    color="text-blue-500 bg-blue-50 border-blue-100"
-                    title="Calibration Complete"
-                    desc="Sensor calibration completed successfully"
-                    time="1 day ago"
-                  />
+                  <p className="text-sm text-slate-400">No recent alerts</p>
                 </div>
               </div>
 

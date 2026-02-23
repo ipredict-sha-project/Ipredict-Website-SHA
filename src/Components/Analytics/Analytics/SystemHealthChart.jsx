@@ -29,7 +29,7 @@ const SystemHealthChart = () => {
     datasets: [
       {
         label: 'System Health Score',
-        data: [82, 79, 85, 88, 84, 87, 90, 86, 88, 91, 89, 92],
+        data: [],
         borderColor: '#2962ff',
         backgroundColor: 'rgba(41, 98, 255, 0.1)',
         borderWidth: 3,

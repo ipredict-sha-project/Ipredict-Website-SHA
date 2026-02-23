@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import './CreateReportModal.css';
-
-// Asset URLs from Figma
-const iconClose = "https://www.figma.com/api/mcp/asset/fdbee8cd-03ef-4a53-9b5b-423e4a03b913";
-const iconPDF = "https://www.figma.com/api/mcp/asset/34ff4fe2-a88a-40e8-9168-8679edff8d26";
-const iconCSV = "https://www.figma.com/api/mcp/asset/2a18fc52-16cd-458f-9647-ea58a26dc169";
-const iconGenerate = "https://www.figma.com/api/mcp/asset/45032c53-870d-46d8-baab-0927306e950c";
+import { X, FileText, Sheet, Zap } from 'lucide-react';
 
 function CreateReportModal({ isOpen, onClose }) {
   const [reportType, setReportType] = useState('');
@@ -42,7 +37,7 @@ function CreateReportModal({ isOpen, onClose }) {
             <p className="modal-subtitle">Configure and generate a comprehensive system report</p>
           </div>
           <button className="modal-close-btn" onClick={onClose}>
-            <img src={iconClose} alt="Close" />
+            <X size={20} />
           </button>
         </div>
 
@@ -110,7 +105,7 @@ function CreateReportModal({ isOpen, onClose }) {
                       onChange={(e) => setExportFormat(e.target.value)}
                     />
                     <div className="format-option-content">
-                      <img src={iconPDF} alt="PDF" className="format-icon" />
+                      <FileText size={24} className="format-icon" />
                       <span>PDF</span>
                     </div>
                   </label>
@@ -123,7 +118,7 @@ function CreateReportModal({ isOpen, onClose }) {
                       onChange={(e) => setExportFormat(e.target.value)}
                     />
                     <div className="format-option-content">
-                      <img src={iconCSV} alt="CSV" className="format-icon" />
+                      <Sheet size={24} className="format-icon" />
                       <span>CSV</span>
                     </div>
                   </label>
@@ -195,7 +190,7 @@ function CreateReportModal({ isOpen, onClose }) {
                 Preview Report
               </button>
               <button type="submit" className="btn-generate">
-                <img src={iconGenerate} alt="" className="btn-icon" />
+                <Zap size={20} className="btn-icon" />
                 Generate Report
               </button>
             </div>

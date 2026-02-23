@@ -22,123 +22,13 @@ import {
   MoreVertical,
   LogOut,
 } from "lucide-react";
-
-// --- MOCK DATA ---
-const mockDevices = [
-  {
-    id: "DEV-001",
-    name: "Temperature Sensor A1",
-    type: "Temperature Sensor",
-    status: "Online",
-    assignedTo: { name: "Ahmed Hassan", initials: "AH", color: "bg-blue-600" },
-    lastSeen: "2 minutes ago",
-  },
-  {
-    id: "DEV-002",
-    name: "Pressure Monitor B2",
-    type: "Pressure Sensor",
-    status: "Online",
-    assignedTo: { name: "Sarah Mohamed", initials: "SM", color: "bg-blue-600" },
-    lastSeen: "5 minutes ago",
-  },
-  {
-    id: "DEV-003",
-    name: "Humidity Detector C3",
-    type: "Humidity Sensor",
-    status: "Offline",
-    assignedTo: { name: "Khaled Ali", initials: "KA", color: "bg-blue-600" },
-    lastSeen: "2 hours ago",
-  },
-  {
-    id: "DEV-004",
-    name: "Motion Sensor D4",
-    type: "Motion Detector",
-    status: "Online",
-    assignedTo: null,
-    lastSeen: "1 minute ago",
-  },
-  {
-    id: "DEV-005",
-    name: "Air Quality Monitor E5",
-    type: "Air Quality Sensor",
-    status: "Online",
-    assignedTo: {
-      name: "Fatima Ibrahim",
-      initials: "FI",
-      color: "bg-blue-600",
-    },
-    lastSeen: "30 seconds ago",
-  },
-  {
-    id: "DEV-006",
-    name: "Water Flow Meter F6",
-    type: "Flow Sensor",
-    status: "Offline",
-    assignedTo: null,
-    lastSeen: "1 day ago",
-  },
-  {
-    id: "DEV-007",
-    name: "Light Intensity Sensor G7",
-    type: "Light Sensor",
-    status: "Online",
-    assignedTo: { name: "Layla Mahmoud", initials: "LM", color: "bg-blue-600" },
-    lastSeen: "10 minutes ago",
-  },
-  {
-    id: "DEV-008",
-    name: "Smoke Detector H8",
-    type: "Safety Sensor",
-    status: "Online",
-    assignedTo: { name: "Ahmed Hassan", initials: "AH", color: "bg-blue-600" },
-    lastSeen: "3 minutes ago",
-  },
-];
-
-const mockUsers = [
-  {
-    id: 1,
-    name: "Ahmed Hassan",
-    email: "ahmed.hassan@ipredict.com",
-    role: "Admin",
-    initials: "AH",
-    color: "bg-blue-600",
-  },
-  {
-    id: 2,
-    name: "Sarah Mohamed",
-    email: "sarah.mohamed@ipredict.com",
-    role: "Technician",
-    initials: "SM",
-    color: "bg-blue-600",
-  },
-  {
-    id: 3,
-    name: "Khaled Ali",
-    email: "khaled.ali@ipredict.com",
-    role: "Technician",
-    initials: "KA",
-    color: "bg-blue-600",
-  },
-  {
-    id: 4,
-    name: "Fatima Ibrahim",
-    email: "fatima.ibrahim@ipredict.com",
-    role: "Technician",
-    initials: "FI",
-    color: "bg-blue-600",
-  },
-  {
-    id: 5,
-    name: "Layla Mahmoud",
-    email: "layla.mahmoud@ipredict.com",
-    role: "Technician",
-    initials: "LM",
-    color: "bg-blue-600",
-  },
-];
+import { fetchDevices } from '../../services/analyticsService';
 
 function Devices() {
+  // Data State
+  const [devices, setDevices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   // Modal States
   const [activeModal, setActiveModal] = useState(null); // 'register', 'details', 'edit', 'assign', null
   const [selectedDevice, setSelectedDevice] = useState(null);
@@ -146,6 +36,23 @@ function Devices() {
   // Dropdown States
   const [activeDropdown, setActiveDropdown] = useState(null); // 'status', 'assignment', 'sort', 'profile'
   const [activeRowMenu, setActiveRowMenu] = useState(null); // Track which row's menu is open
+
+  // Fetch devices from Firebase
+  useEffect(() => {
+    const loadDevices = async () => {
+      setLoading(true);
+      try {
+        const devicesData = await fetchDevices();
+        setDevices(devicesData);
+      } catch (error) {
+        console.error('Error loading devices:', error);
+        setDevices([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDevices();
+  }, []);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -178,7 +85,7 @@ function Devices() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 relative">
+    <div className="bg-slate-50 font-sans text-slate-900 relative">
       {/* --- Main Content --- */}
       <main className="max-w-[1600px] mx-auto px-6 py-8 pb-32">
         <div className="flex justify-between items-start mb-8">
@@ -200,13 +107,13 @@ function Devices() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-          <StatCard label="TOTAL DEVICES" value="8" />
-          <StatCard label="ONLINE DEVICES" value="6" color="text-emerald-500" />
-          <StatCard label="OFFLINE DEVICES" value="2" color="text-slate-400" />
-          <StatCard label="ASSIGNED DEVICES" value="6" color="text-blue-600" />
+          <StatCard label="TOTAL DEVICES" value={devices.length} />
+          <StatCard label="ONLINE DEVICES" value={devices.filter(d => d.status === "Online").length} color="text-emerald-500" />
+          <StatCard label="OFFLINE DEVICES" value={devices.filter(d => d.status === "Offline").length} color="text-slate-400" />
+          <StatCard label="ASSIGNED DEVICES" value={devices.filter(d => d.assignedTo).length} color="text-blue-600" />
           <StatCard
             label="UNASSIGNED DEVICES"
-            value="2"
+            value={devices.filter(d => !d.assignedTo).length}
             color="text-orange-500"
           />
         </div>
@@ -271,12 +178,25 @@ function Devices() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {mockDevices.map((device) => (
-                <tr
-                  key={device.id}
-                  onClick={() => openDetails(device)}
-                  className="hover:bg-slate-50 cursor-pointer transition-colors group"
-                >
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                    Loading devices...
+                  </td>
+                </tr>
+              ) : devices.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
+                    No devices found
+                  </td>
+                </tr>
+              ) : (
+                devices.map((device) => (
+                  <tr
+                    key={device.id}
+                    onClick={() => openDetails(device)}
+                    className="hover:bg-slate-50 cursor-pointer transition-colors group"
+                  >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white shrink-0">
@@ -374,28 +294,25 @@ function Devices() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
 
           {/* Pagination */}
           <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <div className="text-sm text-slate-500">
-              Showing <span className="font-medium text-slate-900">1</span>-{" "}
-              <span className="font-medium text-slate-900">8</span> of{" "}
-              <span className="font-medium text-slate-900">8</span> devices
+              Showing <span className="font-medium text-slate-900">{devices.length > 0 ? 1 : 0}</span>–<span className="font-medium text-slate-900">{devices.length}</span> of{" "}
+              <span className="font-medium text-slate-900">{devices.length}</span> devices
             </div>
             <div className="flex gap-2">
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Previous
               </button>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm shadow-blue-200">
                 1
               </button>
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
-                2
-              </button>
-              <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
+              <button disabled className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-400 cursor-default">
                 Next
               </button>
             </div>
@@ -595,20 +512,20 @@ function Devices() {
                 />
                 <DetailBox
                   label="Last Seen"
-                  value="1 minute ago"
+                  value={selectedDevice.lastSeen || "–"}
                   icon={Clock}
                 />
                 <DetailBox
                   label="Registered"
-                  value="Jan 10, 2025"
+                  value={selectedDevice.created || "–"}
                   icon={CheckCircle}
                 />
                 <DetailBox
                   label="IP Address"
-                  value="192.168.1.104"
+                  value={selectedDevice.ip || "–"}
                   icon={Signal}
                 />
-                <DetailBox label="Firmware" value="v2.3.1" icon={Cpu} />
+                <DetailBox label="Firmware" value={selectedDevice.firmware || "–"} icon={Cpu} />
               </div>
             </Section>
 
@@ -802,10 +719,10 @@ function Devices() {
             >
               <Input
                 label="IP Address"
-                value="192.168.1.101"
+                value={selectedDevice.ip || ""}
                 className="mb-4"
               />
-              <Input label="Firmware Version" value="v2.3.1" />
+              <Input label="Firmware Version" value={selectedDevice.firmware || ""} />
             </Section>
 
             <Section
@@ -911,7 +828,7 @@ function Devices() {
 
             <Section
               title="Available Users"
-              subtitle="5 users found"
+              subtitle="Select a user to assign"
               icon={User}
               iconColor="text-emerald-500 bg-emerald-50"
             >
@@ -921,7 +838,7 @@ function Devices() {
               </div>
 
               <div className="space-y-3 mt-4">
-                {mockUsers.map((user, idx) => (
+                {[].map((user, idx) => (
                   <div
                     key={user.id}
                     className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${idx === 0 ? "bg-blue-50 border-blue-200 ring-1 ring-blue-200" : "bg-white border-slate-200 hover:bg-slate-50"}`}

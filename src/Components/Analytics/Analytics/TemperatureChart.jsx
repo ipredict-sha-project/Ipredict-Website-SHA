@@ -29,7 +29,7 @@ const TemperatureChart = () => {
     datasets: [
       {
         label: 'Temperature',
-        data: [22, 21, 20, 21, 23, 26, 28, 30, 29, 27, 25, 23],
+        data: [],
         borderColor: '#fb2c36',
         backgroundColor: 'rgba(251, 44, 54, 0.1)',
         borderWidth: 3,

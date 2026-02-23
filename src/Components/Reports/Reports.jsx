@@ -1,27 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Reports.css';
-
-// Asset URLs from Figma (node 23:1980)
-const iconGenerate = "https://www.figma.com/api/mcp/asset/543ef404-496c-4467-b45d-ea3d2f06557a";
-const iconReports = "https://www.figma.com/api/mcp/asset/3adf6e90-9530-44fd-b945-acb81f15122f";
-const iconCalendar = "https://www.figma.com/api/mcp/asset/7e175ab6-9846-4840-bf82-4be294b085fb";
-const iconChart = "https://www.figma.com/api/mcp/asset/e87448c1-43c5-4d53-95ff-7d338f71c18a";
-const iconClock = "https://www.figma.com/api/mcp/asset/585ce222-d326-4230-bcfb-d43dc89a85fc";
-const iconCloseX = "https://www.figma.com/api/mcp/asset/45873cee-617c-4712-a6ee-7ccbf3ff19f5";
-const iconPDFFormat = "https://www.figma.com/api/mcp/asset/52e5876b-ad22-40fd-8739-db8812cab61b";
-const iconCSVFormat = "https://www.figma.com/api/mcp/asset/575eb721-3681-4e8f-92c7-fb849d18650f";
-const iconGenerateBlue = "https://www.figma.com/api/mcp/asset/65d82396-a5f6-405f-98c1-a95431e3b06a";
-const iconSearch = "https://www.figma.com/api/mcp/asset/808deb04-8ab2-4f7a-b6ce-bec1ccd35c77";
-const iconDeviceHealth = "https://www.figma.com/api/mcp/asset/e15df841-210a-4ab9-80db-ab0d87382e3b";
-const iconSensors = "https://www.figma.com/api/mcp/asset/41a958b7-b530-41e9-a543-a017634a06d6";
-const iconAlerts = "https://www.figma.com/api/mcp/asset/5e22f6d5-915e-4278-9560-271f1d521337";
-const iconAnalytics = "https://www.figma.com/api/mcp/asset/b67785bc-e789-492e-b1de-97e4159d89d6";
-const iconUsers = "https://www.figma.com/api/mcp/asset/69c26844-db57-46ba-b21a-4a2ce62a1a80";
-const iconPDF = "https://www.figma.com/api/mcp/asset/d1169280-0639-46ef-951a-04c0647c574c";
-const iconCSV = "https://www.figma.com/api/mcp/asset/7fd8efa6-752a-4a3e-9379-bdf9d9baecf0";
-const iconActions = "https://www.figma.com/api/mcp/asset/7360a349-911f-49ad-93a2-2b19478d5438";
+import { fetchReports } from '../../services/analyticsService';
+import {
+  Plus, FileText, Calendar, BarChart3, Clock, X,
+  FileType, Sheet, Search, Activity, Radio, AlertCircle,
+  TrendingUp, Users, File, MoreVertical
+} from 'lucide-react';
 
 function Reports() {
+  // Data State
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [showCreateReport, setShowCreateReport] = useState(false);
   const [reportType, setReportType] = useState('');
   const [dateRange, setDateRange] = useState('');
@@ -30,6 +20,36 @@ function Reports() {
   const [includeSensorData, setIncludeSensorData] = useState(false);
   const [includeCharts, setIncludeCharts] = useState(false);
   const [emailReport, setEmailReport] = useState(false);
+
+  // Icon component mapping
+  const getReportIcon = (iconType) => {
+    const iconMap = {
+      'device': Activity,
+      'sensors': Radio,
+      'alerts': AlertCircle,
+      'analytics': TrendingUp,
+      'users': Users
+    };
+    const IconComponent = iconMap[iconType] || FileText;
+    return <IconComponent size={20} className="report-icon" />;
+  };
+
+  // Fetch reports from Firebase
+  useEffect(() => {
+    const loadReports = async () => {
+      setLoading(true);
+      try {
+        const reportsData = await fetchReports();
+        setReports(reportsData);
+      } catch (error) {
+        console.error('Error loading reports:', error);
+        setReports([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadReports();
+  }, []);
 
   const handleSubmit = () => {
     console.log('Generating report:', {
@@ -43,69 +63,24 @@ function Reports() {
     });
   };
 
-
-  const reportsData = [
-    {
-      id: 'RPT-2025-001',
-      name: 'Device Health Report - January 2025',
-      type: 'Device Health Report',
-      generatedBy: 'Ahmed Hassan',
-      dateRange: 'Jan 1 - Jan 28, 2025',
-      createdAt: '2 hours ago',
-      format: 'PDF',
-      icon: iconDeviceHealth
-    },
-    {
-      id: 'RPT-2025-002',
-      name: 'Sensors Performance Q1 2025',
-      type: 'Sensors Performance Report',
-      generatedBy: 'Sarah Mohamed',
-      dateRange: 'Jan 1 - Jan 28, 2025',
-      createdAt: '5 hours ago',
-      format: 'CSV',
-      icon: iconSensors
-    },
-    {
-      id: 'RPT-2025-003',
-      name: 'Critical Alerts - Weekly Summary',
-      type: 'Alerts History Report',
-      generatedBy: 'Khaled Ali',
-      dateRange: 'Jan 21 - Jan 28, 2025',
-      createdAt: '1 day ago',
-      format: 'PDF',
-      icon: iconAlerts
-    },
-    {
-      id: 'RPT-2025-004',
-      name: 'System Analytics - Monthly Overview',
-      type: 'System Analytics Report',
-      generatedBy: 'Fatima Ibrahim',
-      dateRange: 'Jan 1 - Jan 28, 2025',
-      createdAt: '2 days ago',
-      format: 'PDF',
-      icon: iconAnalytics
-    },
-    {
-      id: 'RPT-2025-005',
-      name: 'User Activity Report - January',
-      type: 'User Activity Report',
-      generatedBy: 'Ahmed Hassan',
-      dateRange: 'Jan 1 - Jan 28, 2025',
-      createdAt: '3 days ago',
-      format: 'CSV',
-      icon: iconUsers
-    },
-    {
-      id: 'RPT-2024-156',
-      name: 'Device Health Report - December 2024',
-      type: 'Device Health Report',
-      generatedBy: 'Sarah Mohamed',
-      dateRange: 'Dec 1 - Dec 31, 2024',
-      createdAt: '1 month ago',
-      format: 'PDF',
-      icon: iconDeviceHealth
+  // Calculate summary stats from actual reports data
+  const totalReports = reports.length;
+  const currentMonth = new Date().getMonth();
+  const reportsThisMonth = reports.filter(report => {
+    // Filter based on createdAt field - adjust logic based on your data structure
+    if (report.createdAt && typeof report.createdAt === 'string') {
+      return report.createdAt.includes('hour') || report.createdAt.includes('day') || report.createdAt.includes('today');
     }
-  ];
+    return false;
+  }).length;
+  
+  const mostGeneratedType = reports.length > 0 
+    ? [...new Set(reports.map(r => r.type))].reduce((a, b) => 
+        reports.filter(r => r.type === a).length >= reports.filter(r => r.type === b).length ? a : b
+      )
+    : 'N/A';
+  
+  const lastGenerated = reports.length > 0 ? reports[0].createdAt : 'N/A';
 
   return (
 
@@ -117,7 +92,7 @@ function Reports() {
           <p className="reports-subtitle">Generate, export, and review comprehensive system reports</p>
         </div>
         <button className="reports-generate-btn" onClick={() => setShowCreateReport(!showCreateReport)}>
-          <img src={iconGenerate} alt="" className="btn-icon" />
+          <Plus size={18} className="btn-icon" />
           Generate Report
         </button>
       </div>
@@ -127,33 +102,33 @@ function Reports() {
         <div className="reports-summary-card">
           <div className="summary-card-header">
             <span className="summary-card-label">TOTAL REPORTS</span>
-            <img src={iconReports} alt="" className="summary-card-icon" />
+            <FileText size={20} className="summary-card-icon" />
           </div>
-          <div className="summary-card-value">6</div>
+          <div className="summary-card-value">{totalReports}</div>
         </div>
 
         <div className="reports-summary-card">
           <div className="summary-card-header">
             <span className="summary-card-label">REPORTS THIS MONTH</span>
-            <img src={iconCalendar} alt="" className="summary-card-icon" />
+            <Calendar size={20} className="summary-card-icon" />
           </div>
-          <div className="summary-card-value primary">5</div>
+          <div className="summary-card-value primary">{reportsThisMonth}</div>
         </div>
 
         <div className="reports-summary-card">
           <div className="summary-card-header">
             <span className="summary-card-label">MOST GENERATED TYPE</span>
-            <img src={iconChart} alt="" className="summary-card-icon" />
+            <BarChart3 size={20} className="summary-card-icon" />
           </div>
-          <div className="summary-card-value success">Device Health</div>
+          <div className="summary-card-value success">{mostGeneratedType}</div>
         </div>
 
         <div className="reports-summary-card">
           <div className="summary-card-header">
             <span className="summary-card-label">LAST GENERATED</span>
-            <img src={iconClock} alt="" className="summary-card-icon" />
+            <Clock size={20} className="summary-card-icon" />
           </div>
-          <div className="summary-card-value gray">2 hours ago</div>
+          <div className="summary-card-value gray">{lastGenerated}</div>
         </div>
       </div>
 
@@ -166,7 +141,7 @@ function Reports() {
               <p className="create-report-subtitle">Configure and generate a comprehensive system report</p>
             </div>
             <button className="close-btn" onClick={() => setShowCreateReport(false)}>
-              <img src={iconCloseX} alt="Close" className="close-icon" />
+              <X size={20} className="close-icon" />
             </button>
           </div>
 
@@ -225,7 +200,7 @@ function Reports() {
                       checked={exportFormat === 'PDF'}
                       onChange={(e) => setExportFormat(e.target.value)}
                     />
-                    <img src={iconPDFFormat} alt="PDF" className="format-icon" />
+                    <FileType size={20} className="format-icon" />
                     <span>PDF</span>
                   </label>
                   <label className={`format-option ${exportFormat === 'CSV' ? 'active' : ''}`}>
@@ -236,7 +211,7 @@ function Reports() {
                       checked={exportFormat === 'CSV'}
                       onChange={(e) => setExportFormat(e.target.value)}
                     />
-                    <img src={iconCSVFormat} alt="CSV" className="format-icon" />
+                    <Sheet size={20} className="format-icon" />
                     <span>CSV</span>
                   </label>
                 </div>
@@ -256,11 +231,7 @@ function Reports() {
                   }}
                 >
                   <option value="all">All Devices</option>
-                  <option value="DEV-001">DEV-001 - Temperature Sensor A1</option>
-                  <option value="DEV-002">DEV-002 - Pressure Monitor B2</option>
-                  <option value="DEV-003">DEV-003 - Humidity Detector C3</option>
-                  <option value="DEV-004">DEV-004 - Motion Sensor D4</option>
-                  <option value="DEV-005">DEV-005 - Air Quality Monitor E5</option>
+                  {/* Device options will be loaded from Firebase */}
                 </select>
                 <p className="form-help-text">Hold Ctrl/Cmd to select multiple devices</p>
               </div>
@@ -303,7 +274,7 @@ function Reports() {
                 Preview Report
               </button>
               <button className="generate-report-btn" onClick={handleSubmit}>
-                <img src={iconGenerateBlue} alt="" className="btn-icon" />
+                <Plus size={18} className="btn-icon" />
                 Generate Report
               </button>
             </div>
@@ -314,7 +285,7 @@ function Reports() {
       {/* Search and Filters */}
       <div className="reports-search-container">
         <div className="reports-search-bar">
-          <img src={iconSearch} alt="" className="search-icon" />
+          <Search size={18} className="search-icon" />
           <input 
             type="text" 
             placeholder="Search by report name or type"
@@ -340,12 +311,25 @@ function Reports() {
             </tr>
           </thead>
           <tbody>
-            {reportsData.map((report) => (
-              <tr key={report.id}>
+            {loading ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
+                  Loading reports...
+                </td>
+              </tr>
+            ) : reports.length === 0 ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
+                  No reports found
+                </td>
+              </tr>
+            ) : (
+              reports.map((report) => (
+                <tr key={report.id}>
                 <td>
                   <div className="report-name-cell">
                     <div className="report-icon-container">
-                      <img src={report.icon} alt="" className="report-icon" />
+                      {getReportIcon(report.icon)}
                     </div>
                     <div className="report-name-content">
                       <div className="report-name">{report.name}</div>
@@ -359,32 +343,33 @@ function Reports() {
                 <td className="report-created-at">{report.createdAt}</td>
                 <td>
                   <span className={`report-format-badge ${report.format.toLowerCase()}`}>
-                    <img src={report.format === 'PDF' ? iconPDF : iconCSV} alt="" className="format-icon" />
+                    {report.format === 'PDF' ? (
+                      <FileType size={16} className="format-icon" />
+                    ) : (
+                      <Sheet size={16} className="format-icon" />
+                    )}
                     {report.format}
                   </span>
                 </td>
                 <td>
                   <button className="report-action-btn">
-                    <img src={iconActions} alt="" className="action-icon" />
+                    <MoreVertical size={18} className="action-icon" />
                   </button>
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
 
         {/* Pagination */}
-        <div className="reports-pagination">
-          <div className="pagination-info">
-            Showing <strong>1</strong> to <strong>6</strong> of <strong>6</strong> reports
+        {reports.length > 0 && (
+          <div className="reports-pagination">
+            <div className="pagination-info">
+              Showing <strong>{reports.length > 0 ? 1 : 0}</strong> to <strong>{reports.length}</strong> of <strong>{reports.length}</strong> reports
+            </div>
           </div>
-          <div className="pagination-controls">
-            <button className="pagination-btn">Previous</button>
-            <button className="pagination-btn active">1</button>
-            <button className="pagination-btn">2</button>
-            <button className="pagination-btn">Next</button>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Footer */}

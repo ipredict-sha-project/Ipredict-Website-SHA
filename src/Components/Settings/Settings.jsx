@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Bell,
@@ -20,7 +20,10 @@ import {
   Wind,
   ChevronDown,
 } from "lucide-react";
+import { fetchSettings, updateSettings } from '../../services/analyticsService';
+
 function Settings() {
+  const [loading, setLoading] = useState(false);
   const [sensitivity, setSensitivity] = useState("Medium");
   const [systemMode, setSystemMode] = useState("Live");
   const [tempWeight, setTempWeight] = useState(35);
@@ -28,8 +31,55 @@ function Settings() {
   const [soundWeight, setSoundWeight] = useState(20);
   const [airQualityWeight, setAirQualityWeight] = useState(15);
 
+  // Load settings from Firebase
+  useEffect(() => {
+    const loadSettings = async () => {
+      setLoading(true);
+      try {
+        const settingsData = await fetchSettings();
+        if (settingsData) {
+          if (settingsData.sensitivity) setSensitivity(settingsData.sensitivity);
+          if (settingsData.systemMode) setSystemMode(settingsData.systemMode);
+          if (settingsData.tempWeight !== undefined) setTempWeight(settingsData.tempWeight);
+          if (settingsData.vibrationWeight !== undefined) setVibrationWeight(settingsData.vibrationWeight);
+          if (settingsData.soundWeight !== undefined) setSoundWeight(settingsData.soundWeight);
+          if (settingsData.airQualityWeight !== undefined) setAirQualityWeight(settingsData.airQualityWeight);
+        }
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSettings();
+  }, []);
+
+  const handleSaveSettings = async () => {
+    setLoading(true);
+    try {
+      const success = await updateSettings({
+        sensitivity,
+        systemMode,
+        tempWeight,
+        vibrationWeight,
+        soundWeight,
+        airQualityWeight
+      });
+      if (success) {
+        alert('Settings saved successfully!');
+      } else {
+        alert('Failed to save settings. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      alert('Error saving settings.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+    <div className="bg-slate-50 font-sans text-slate-900">
       {/* --- Main Content --- */}
       <main className="max-w-[1600px] mx-auto px-6 py-8 pb-32">
         {/* Page Header */}

@@ -29,10 +29,10 @@ function SystemActivityChart() {
   const timeLabels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'];
   
   // Data points for Active Devices (blue line)
-  const devicesValues = [1700, 1800, 2100, 2300, 2600, 2400, 2200, 2100];
+  const devicesValues = [];
   
   // Data points for Sensor Readings (green line)
-  const sensorsValues = [4200, 4500, 5000, 5400, 5800, 6000, 5600, 5300];
+  const sensorsValues = [];
 
   const data = {
     labels: timeLabels,
