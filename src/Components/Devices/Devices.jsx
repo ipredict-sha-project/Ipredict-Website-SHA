@@ -1072,7 +1072,7 @@ function ProfileMenu({ isOpen, onClick }) {
 
 function ModalLayout({ title, subtitle, onClose, children }) {
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-hidden">
       <div className="bg-white w-full max-w-3xl rounded-3xl shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between">

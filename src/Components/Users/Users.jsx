@@ -1045,7 +1045,7 @@ function ModalLayout({
   width = "max-w-5xl",
 }) {
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-hidden">
       <div
         className={`bg-white w-full ${width} rounded-3xl shadow-2xl flex flex-col max-h-[95vh]`}
       >
@@ -1093,7 +1093,7 @@ function ModalLayout({
 
 function Section({ title, subtitle, icon: Icon, iconColor, children }) {
   return (
-    <div className="border border-slate-200 rounded-2xl p-6 h-full min-w-0">
+    <div className="border border-slate-200 rounded-2xl p-6 min-w-0">
       <div className="flex items-center gap-3 mb-6">
         <div
           className={`w-10 h-10 rounded-xl ${iconColor} flex items-center justify-center flex-shrink-0`}
